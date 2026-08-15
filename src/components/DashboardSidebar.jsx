@@ -13,7 +13,7 @@ const DashboardSidebar = () => {
           <div className="w-8 h-8 bg-[#00f2ea] rounded-lg shadow-[0_0_15px_rgba(0,242,234,0.4)] flex items-center justify-center text-black font-bold">
             A
           </div>
-          <span className="text-xl font-black italic ltr">apex</span>
+          <span className="text-xl font-black italic ltr">Apex</span>
         </div>
 
         <nav className="space-y-1.5">

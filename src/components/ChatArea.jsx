@@ -29,7 +29,7 @@ const ChatArea = ({ messages, onSendMessage, isTyping, onToggleSidebar, onToggle
             <path d="M3 12h18M3 6h18M3 18h18" />
           </svg>
         </button>
-        <span className="font-semibold text-white">apex</span>
+        <span className="font-semibold text-white">Apex</span>
         <button
           type="button"
           onClick={onToggleNavPanel}

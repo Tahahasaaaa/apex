@@ -255,7 +255,7 @@ const Login = ({ onLogin }) => {
 
       <div className="w-full max-w-md">
         <h1 className="text-3xl font-black mb-3 text-center">
-          به <span className="text-[#00f2ea] ltr">apex</span> خوش آمدید
+          به <span className="text-[#00f2ea] ltr">Apex</span> خوش آمدید
         </h1>
         <p className="text-gray-500 mb-8 text-center text-sm">یکی از روش‌ها را انتخاب کنید</p>
 
