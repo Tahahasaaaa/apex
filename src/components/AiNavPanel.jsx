@@ -27,8 +27,8 @@ const AiNavPanel = ({ isOpen, onClose }) => {
           <div className="space-y-6">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-[#00f2ea] text-black flex items-center justify-center font-black">Z</div>
-                <p className="text-sm font-black text-white">پنل سریع</p>
+                <div className="h-8 w-8 rounded-lg bg-[#00f2ea] text-black flex items-center justify-center font-black">A</div>
+                <p className="text-sm font-black text-white"><span dir="ltr">apex</span> | پنل سریع</p>
               </div>
               <button
                 type="button"

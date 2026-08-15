@@ -54,7 +54,7 @@ const Home = () => {
                   <path d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <span className="text-2xl font-black tracking-tighter ltr">Apex</span>
+              <span className="text-2xl font-black tracking-tighter ltr">apex</span>
               
               {/* بخش ناوبری (Navbar) - رفرنس در اینجا اضافه شد */}
               <div className="flex items-center gap-4">
@@ -108,13 +108,13 @@ const Home = () => {
 
         <main className="flex flex-col items-center text-center pt-48 pb-32 px-4">
           <div className="mb-8 px-6 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs font-bold text-[#00f2ea] animate-bounce">
-پلتفرم هوشمند مدیریت اهداف نسل Z          </div>
+پلتفرم هوشمند مدیریت اهداف با apex          </div>
           <h1 className="text-6xl md:text-8xl font-black mb-10 leading-[1.1] tracking-tight">
             مرزهای پتانسیل خود را <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f2ea] to-[#00c2ff]">جا‌به‌جا کنید</span>
           </h1>
           <p className="text-gray-400 text-xl max-w-2xl mb-12 leading-relaxed font-medium">
-            با قدرت هوش مصنوعی Zenith، برنامه‌ای کاملاً اختصاصی برای رشد فردی، سلامتی و مهارت‌های خود داشته باشید.
+            با قدرت هوش مصنوعی apex، برنامه‌ای کاملاً اختصاصی برای رشد فردی، سلامتی و مهارت‌های خود داشته باشید.
           </p>
           <div className="flex flex-col md:flex-row gap-6">
             <Link to="/dashboard" className="bg-[#00f2ea] text-black font-black px-12 py-5 rounded-2xl text-xl shadow-[0_20px_50px_rgba(0,242,234,0.3)] hover:scale-105 transition-all">
@@ -209,7 +209,7 @@ const Home = () => {
                   <path d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <span className="text-2xl font-black font-vazir ltr">Apex</span>
+              <span className="text-2xl font-black font-vazir ltr">apex</span>
             </div>
             <div className="flex gap-10 text-gray-500 font-bold text-sm">
               <a href="#" className="hover:text-white transition-all">اینستاگرام</a>
@@ -217,7 +217,7 @@ const Home = () => {
               <a href="#" className="hover:text-white transition-all">لینکدین</a>
             </div>
           </div>
-          <p className="mt-12 text-center text-gray-600 text-[10px] tracking-widest" dir="ltr">© 2026 ZENITH AI PLATFORM. ALL RIGHTS RESERVED.</p>
+          <p className="mt-12 text-center text-gray-600 text-[10px] tracking-widest" dir="ltr">© 2026 apex. ALL RIGHTS RESERVED.</p>
         </footer>
       </div>
     </div>

@@ -1,7 +1,7 @@
-# RE-AKT: Concise AI Prompt
+# Apex: Concise AI Prompt
 
 ```
-PROJECT: RE-AKT - Personal Growth & Self-Development Platform
+PROJECT: Apex - Personal Growth & Self-Development Platform
 
 === CORE IDENTITY ===
 • Dark mode AI SaaS platform (advanced, intelligent, calm)

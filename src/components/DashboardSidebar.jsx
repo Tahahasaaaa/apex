@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { setAuthToken } from "../api/client";
 
 const DashboardSidebar = () => {
   const linkBase = "flex items-center gap-3 p-4 rounded-2xl transition-all";
@@ -10,9 +11,9 @@ const DashboardSidebar = () => {
       <div className="space-y-8">
         <div className="flex items-center gap-2 mb-8 px-1">
           <div className="w-8 h-8 bg-[#00f2ea] rounded-lg shadow-[0_0_15px_rgba(0,242,234,0.4)] flex items-center justify-center text-black font-bold">
-            Z
+            A
           </div>
-          <span className="text-xl font-black italic ltr">Apex</span>
+          <span className="text-xl font-black italic ltr">apex</span>
         </div>
 
         <nav className="space-y-1.5">
@@ -41,9 +42,16 @@ const DashboardSidebar = () => {
         <div className="flex items-center gap-3 text-gray-500 hover:text-white cursor-pointer py-2 transition-all">
           <span>⚙️</span> تنظیمات
         </div>
-        <NavLink to="/" className="flex items-center gap-3 text-red-400/70 hover:text-red-400 cursor-pointer py-2 transition-all text-sm font-bold">
+        <button
+          type="button"
+          onClick={() => {
+            setAuthToken(null);
+            window.location.href = "/";
+          }}
+          className="flex items-center gap-3 text-red-400/70 hover:text-red-400 cursor-pointer py-2 transition-all text-sm font-bold w-full text-right"
+        >
           <span>↪</span> خروج از پنل
-        </NavLink>
+        </button>
       </div>
     </aside>
   );

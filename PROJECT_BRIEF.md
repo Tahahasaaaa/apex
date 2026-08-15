@@ -1,8 +1,8 @@
-# 🧠 RE-AKT - Project Brief & Design System Prompt
+# 🧠 Apex - Project Brief & Design System Prompt
 
 ## 📋 Project Overview
 
-**Project Name:** RE-AKT  
+**Project Name:** Apex
 **Subtitle:** Personal Growth & Self-Development Platform  
 **Platform:** Web Application (React 19 + Vite)  
 **Language:** Persian (RTL)  
