@@ -19,7 +19,7 @@ const ChatArea = ({ messages, onSendMessage, isTyping, onToggleSidebar, onToggle
   const suggestions = ["کمکم کن برنامه امروزمو بچینم", "برای تمرکز چی کار کنم؟", "یه برنامه شروع سریع بده"];
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0a0a0c] relative">
+    <div className="flex-1 flex flex-col h-full bg-[#0a0a0c] relative min-w-0">
       <div className="relative flex items-center justify-center h-14 px-4 border-b border-white/5">
         <button
           onClick={onToggleSidebar}
@@ -40,10 +40,10 @@ const ChatArea = ({ messages, onSendMessage, isTyping, onToggleSidebar, onToggle
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <h2 className="text-3xl font-bold text-white mb-6">چطور می‌تونم کمکت کنم؟</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">چطور می‌تونم کمکت کنم؟</h2>
             <div className="flex flex-wrap justify-center gap-2">
               {suggestions.map((suggestion) => (
                 <button
@@ -61,13 +61,13 @@ const ChatArea = ({ messages, onSendMessage, isTyping, onToggleSidebar, onToggle
             {messages.map((msg) => (
               <div key={msg.id} className={`flex ${msg.role === "user" ? "flex-row-reverse gap-4" : "justify-start"}`}>
                 {msg.role === "user" ? (
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#00f2ea]/20 text-[#00f2ea]">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#00f2ea]/20 text-[#00f2ea] shrink-0">
                     <User size={16} />
                   </div>
                 ) : null}
 
                 <div
-                  className={`max-w-[80%] p-4 rounded-2xl ${
+                  className={`max-w-[85%] sm:max-w-[80%] p-3 sm:p-4 rounded-2xl break-words ${
                     msg.role === "user" ? "bg-[#00f2ea] text-black" : "bg-white/5 text-gray-200"
                   }`}
                 >
@@ -87,20 +87,29 @@ const ChatArea = ({ messages, onSendMessage, isTyping, onToggleSidebar, onToggle
         )}
       </div>
 
-      <div className="p-4">
-        <div className="max-w-3xl mx-auto relative">
-          <input
+      <div className="p-3 sm:p-4 border-t border-white/5">
+        <div className="max-w-3xl mx-auto flex items-end gap-2 sm:gap-3">
+          <textarea
             value={input}
             onChange={(event) => setInput(event.target.value)}
-            onKeyDown={(event) => event.key === "Enter" && handleSubmit()}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                handleSubmit();
+              }
+            }}
             placeholder="پیام خودت را بنویس..."
-            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white outline-none focus:border-[#00f2ea] transition-all"
+            rows={1}
+            className="min-h-[52px] max-h-32 w-full resize-none overflow-y-auto bg-white/5 border border-white/10 rounded-2xl py-3 pl-4 pr-4 text-white outline-none focus:border-[#00f2ea] transition-all placeholder:text-gray-400"
           />
           <button
+            type="button"
             onClick={handleSubmit}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-xl flex items-center justify-center text-black hover:bg-gray-200"
+            className="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl bg-[#00f2ea] text-black shadow-[0_0_20px_rgba(0,242,234,0.3)] hover:brightness-110 transition-all disabled:opacity-50"
+            aria-label="ارسال پیام"
+            disabled={!input.trim()}
           >
-            <ArrowUp size={20} />
+            <ArrowUp size={18} />
           </button>
         </div>
       </div>

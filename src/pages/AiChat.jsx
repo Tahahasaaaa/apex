@@ -124,10 +124,14 @@ const AiChat = () => {
   const activeMessages = activeSessionId && messagesBySession[activeSessionId] ? messagesBySession[activeSessionId] : [];
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-[#0a0a0c] text-white" dir="ltr">
+    <div className="flex h-screen w-full overflow-hidden bg-[#0a0a0c] text-white flex-col md:flex-row" dir="ltr">
       <style>{`.no-scrollbar::-webkit-scrollbar { display: none; }`}</style>
 
-      <div className={`relative flex flex-col transition-all duration-300 border-r border-white/5 bg-[#0a0a0c] ${sidebarOpen ? "w-72" : "w-20"}`}>
+      <div
+        className={`relative flex flex-col transition-all duration-300 border-r border-white/5 bg-[#0a0a0c] ${
+          sidebarOpen ? "w-full h-72 md:h-full md:w-72" : "w-full h-16 md:w-20"
+        }`}
+      >
         <div className="p-4 border-b border-white/5 flex items-center justify-between h-20">
           <button
             onClick={() => setSidebarOpen((prev) => !prev)}
