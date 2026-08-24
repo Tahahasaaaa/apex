@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Menu, User } from "lucide-react";
 
-const ChatArea = ({ messages, onSendMessage, isTyping, onToggleSidebar, onToggleNavPanel }) => {
+const ChatArea = ({ messages, onSendMessage, isTyping, onToggleNavPanel }) => {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
 
@@ -21,14 +21,6 @@ const ChatArea = ({ messages, onSendMessage, isTyping, onToggleSidebar, onToggle
   return (
     <div className="flex-1 flex flex-col h-full bg-[#0a0a0c] relative min-w-0">
       <div className="relative flex items-center justify-center h-14 px-4 border-b border-white/5">
-        <button
-          onClick={onToggleSidebar}
-          className="absolute left-4 p-2 text-gray-400 hover:text-[#00f2ea] md:hidden rounded-lg"
-        >
-          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path d="M3 12h18M3 6h18M3 18h18" />
-          </svg>
-        </button>
         <span className="font-semibold text-white">Apex</span>
         <button
           type="button"

@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaHome, FaBars } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import ChatSidebar from "../components/ChatSidebar";
 import ChatArea from "../components/ChatArea";
 import AiNavPanel from "../components/AiNavPanel";
@@ -10,8 +9,6 @@ import { planService } from "../services/planService";
 const generateId = () => Math.random().toString(36).substring(2, 10);
 
 const AiChat = () => {
-  const navigate = useNavigate();
-
   const [sessions, setSessions] = useState([]);
   const [activeSessionId, setActiveSessionId] = useState(null);
   const [messagesBySession, setMessagesBySession] = useState({});
@@ -167,18 +164,6 @@ const AiChat = () => {
             onDeleteSession={handleDeleteSession}
             isOpen={sidebarOpen}
           />
-        </div>
-
-        <div className="p-4 border-t border-white/5">
-          <button
-            onClick={() => navigate("/")}
-            className={`flex items-center gap-3 hover:bg-white/5 rounded-xl transition-all group text-gray-500 hover:text-[#00f2ea] ${
-              sidebarOpen ? "w-full p-3 justify-start" : "w-12 h-12 justify-center"
-            }`}
-          >
-            <FaHome size={22} className="shrink-0 group-hover:scale-110" />
-            {sidebarOpen ? <span className="text-sm font-medium">صفحه اصلی</span> : null}
-          </button>
         </div>
       </div>
 
