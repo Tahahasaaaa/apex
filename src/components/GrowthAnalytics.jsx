@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Brain, ChevronDown, ChevronUp, Sparkles, Target, TrendingUp, Zap } from "lucide-react";
 import { growthService } from "../services/growthService";
+import DashboardSidebar from "./DashboardSidebar";
 
 const iconMap = { growth: TrendingUp, focus: Zap, clarity: Brain, goals: Target };
 
@@ -46,27 +47,33 @@ export default function GrowthAnalytics() {
   const insights = analytics?.insights || [];
 
   return (
-    <div className="min-h-screen bg-color-bg-primary pt-8 pb-16" dir="rtl">
-      <div className="max-w-7xl mx-auto px-4 mb-12 scroll-reveal">
-        <div className="flex items-center gap-3 mb-4"><div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-cyan-400" /><span className="text-xs font-semibold tracking-wider text-color-text-secondary uppercase">تحلیل هوشمند</span></div>
-        <h1 className="text-4xl md:text-5xl font-bold text-color-text-primary mb-4">رشد <span className="gradient-text">شخصی</span></h1>
-        <p className="text-color-text-secondary max-w-2xl leading-relaxed">بررسی روند رشد ذهنی، بهره‌وری و تکامل شخصی شما.</p>
-      </div>
+    <div className="min-h-screen bg-[#080c14] text-white font-vazir p-4 md:p-6" dir="rtl">
+      <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <DashboardSidebar />
 
-      <div className="max-w-7xl mx-auto px-4 space-y-12">
-        {(loading || error) && <div className={`rounded-2xl border px-4 py-3 text-sm ${error ? "border-red-500/25 bg-red-500/10 text-red-200" : "border-white/5 bg-white/5 text-gray-400"}`}>{loading ? "در حال دریافت تحلیل رشد..." : error}</div>}
+        <div className="lg:col-span-10 space-y-12">
+          <div className="mb-8 scroll-reveal">
+            <div className="flex items-center gap-3 mb-4"><div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-cyan-400" /><span className="text-xs font-semibold tracking-wider text-color-text-secondary uppercase">تحلیل هوشمند</span></div>
+            <h1 className="text-4xl md:text-5xl font-bold text-color-text-primary mb-4">رشد <span className="gradient-text">شخصی</span></h1>
+            <p className="text-color-text-secondary max-w-2xl leading-relaxed">بررسی روند رشد ذهنی، بهره‌وری و تکامل شخصی شما.</p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 scroll-reveal">
-          {statCards.map((card) => <AnalyticsStatCard key={card.id} {...card} icon={iconMap[card.icon] || TrendingUp} />)}
+          <div className="space-y-12">
+            {(loading || error) && <div className={`rounded-2xl border px-4 py-3 text-sm ${error ? "border-red-500/25 bg-red-500/10 text-red-200" : "border-white/5 bg-white/5 text-gray-400"}`}>{loading ? "در حال دریافت تحلیل رشد..." : error}</div>}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 scroll-reveal">
+              {statCards.map((card) => <AnalyticsStatCard key={card.id} {...card} icon={iconMap[card.icon] || TrendingUp} />)}
+            </div>
+
+            {growthData.length ? (
+              <div className="scroll-reveal"><div className="glass p-8"><div className="mb-8"><h2 className="text-2xl font-bold text-color-text-primary mb-2">مسیر رشد</h2><p className="text-color-text-secondary text-sm">معیارهای توسعه شخصی در دوازده ماه</p></div>
+                <div className="w-full h-80 -mx-4 md:mx-0"><ResponsiveContainer width="100%" height="100%"><LineChart data={growthData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} /><XAxis dataKey="month" stroke="rgba(255,255,255,0.3)" style={{ fontSize: "12px" }} /><YAxis stroke="rgba(255,255,255,0.3)" style={{ fontSize: "12px" }} /><Tooltip contentStyle={{ backgroundColor: "rgba(13, 17, 23, 0.9)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "0.75rem" }} labelStyle={{ color: "#fff" }} /><Legend wrapperStyle={{ paddingTop: "20px" }} iconType="circle" /><Line type="monotone" dataKey="growth" stroke="#a855f7" strokeWidth={2.5} dot={false} name="رشد" animationDuration={1200} /><Line type="monotone" dataKey="productivity" stroke="#22d3ee" strokeWidth={2.5} dot={false} name="بهره‌وری" animationDuration={1200} /><Line type="monotone" dataKey="mindfulness" stroke="#6366f1" strokeWidth={2.5} dot={false} name="ذهن‌آگاهی" animationDuration={1200} /></LineChart></ResponsiveContainer></div>
+              </div></div>
+            ) : !loading && !error ? <p className="glass p-8 text-center text-color-text-secondary">هنوز داده‌ای برای تحلیل رشد ثبت نشده است.</p> : null}
+
+            <div className="scroll-reveal"><div className="flex items-center gap-3 mb-6"><Sparkles size={24} className="text-purple-500" /><h2 className="text-2xl font-bold text-color-text-primary">بینش‌های هوشمند</h2></div><div className="grid grid-cols-1 md:grid-cols-3 gap-4">{insights.map((insight) => <InsightCard key={insight.id} insight={insight} isExpanded={expandedInsight === insight.id} onToggle={() => setExpandedInsight((current) => current === insight.id ? null : insight.id)} />)}</div></div>
+          </div>
         </div>
-
-        {growthData.length ? (
-          <div className="scroll-reveal"><div className="glass p-8"><div className="mb-8"><h2 className="text-2xl font-bold text-color-text-primary mb-2">مسیر رشد</h2><p className="text-color-text-secondary text-sm">معیارهای توسعه شخصی در دوازده ماه</p></div>
-            <div className="w-full h-80 -mx-4 md:mx-0"><ResponsiveContainer width="100%" height="100%"><LineChart data={growthData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} /><XAxis dataKey="month" stroke="rgba(255,255,255,0.3)" style={{ fontSize: "12px" }} /><YAxis stroke="rgba(255,255,255,0.3)" style={{ fontSize: "12px" }} /><Tooltip contentStyle={{ backgroundColor: "rgba(13, 17, 23, 0.9)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "0.75rem" }} labelStyle={{ color: "#fff" }} /><Legend wrapperStyle={{ paddingTop: "20px" }} iconType="circle" /><Line type="monotone" dataKey="growth" stroke="#a855f7" strokeWidth={2.5} dot={false} name="رشد" animationDuration={1200} /><Line type="monotone" dataKey="productivity" stroke="#22d3ee" strokeWidth={2.5} dot={false} name="بهره‌وری" animationDuration={1200} /><Line type="monotone" dataKey="mindfulness" stroke="#6366f1" strokeWidth={2.5} dot={false} name="ذهن‌آگاهی" animationDuration={1200} /></LineChart></ResponsiveContainer></div>
-          </div></div>
-        ) : !loading && !error ? <p className="glass p-8 text-center text-color-text-secondary">هنوز داده‌ای برای تحلیل رشد ثبت نشده است.</p> : null}
-
-        <div className="scroll-reveal"><div className="flex items-center gap-3 mb-6"><Sparkles size={24} className="text-purple-500" /><h2 className="text-2xl font-bold text-color-text-primary">بینش‌های هوشمند</h2></div><div className="grid grid-cols-1 md:grid-cols-3 gap-4">{insights.map((insight) => <InsightCard key={insight.id} insight={insight} isExpanded={expandedInsight === insight.id} onToggle={() => setExpandedInsight((current) => current === insight.id ? null : insight.id)} />)}</div></div>
       </div>
     </div>
   );
