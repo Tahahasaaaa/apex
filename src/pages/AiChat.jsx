@@ -125,8 +125,8 @@ const AiChat = () => {
       <style>{`.no-scrollbar::-webkit-scrollbar { display: none; }`}</style>
 
       <div
-        className={`relative flex flex-col transition-all duration-300 border-r border-white/5 bg-[#0a0a0c] ${
-          sidebarOpen ? "w-full h-72 md:h-full md:w-72" : "w-full h-16 md:w-20"
+        className={`fixed left-0 top-0 bottom-0 z-40 flex flex-col border-r border-white/5 bg-[#0a0a0c] transition-all duration-300 md:static md:left-auto md:top-auto md:bottom-auto ${
+          sidebarOpen ? "w-[75%] md:w-72" : "w-16 md:w-20"
         }`}
       >
         <div className="p-4 border-b border-white/5 flex items-center justify-between h-20">
@@ -172,7 +172,6 @@ const AiChat = () => {
           messages={activeMessages}
           onSendMessage={handleSendMessage}
           isTyping={isTyping}
-          onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
           onToggleNavPanel={() => setNavPanelOpen((prev) => !prev)}
         />
       </div>

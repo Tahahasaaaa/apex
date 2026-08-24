@@ -12,12 +12,12 @@ const DashboardSidebar = () => {
   return (
     <>
       {/* Mobile menu button (visible on small screens) */}
-      <div className="lg:hidden flex justify-end mb-3">
+      <div className="lg:hidden fixed right-4 top-4 z-40">
         <button
           type="button"
           aria-label="باز کردن منوی پنل"
           onClick={() => setMobileOpen(true)}
-          className="p-2 rounded-lg bg-white/5 text-gray-300 hover:bg-white/10 transition-all"
+          className="h-12 w-12 rounded-full border border-white/10 bg-[#0d121d]/90 text-gray-300 shadow-[0_0_20px_rgba(0,0,0,0.35)] hover:bg-white/10 transition-all"
         >
           ☰
         </button>
