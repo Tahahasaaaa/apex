@@ -1,13 +1,31 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { authService } from "../services/authService";
+import AiNavPanel from "./AiNavPanel";
 
 const DashboardSidebar = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
   const linkBase = "flex items-center gap-3 p-4 rounded-2xl transition-all";
   const active = "bg-[#00f2ea]/10 text-[#00f2ea] font-bold shadow-[0_0_20px_rgba(0,242,234,0.05)]";
   const idle = "text-gray-400 hover:text-white hover:bg-white/5";
 
   return (
-    <aside className="lg:col-span-2 hidden lg:flex flex-col justify-between py-2 border-l border-white/5 pr-2 lg:sticky lg:top-4 h-fit self-start">
+    <>
+      {/* Mobile menu button (visible on small screens) */}
+      <div className="lg:hidden flex justify-end mb-3">
+        <button
+          type="button"
+          aria-label="باز کردن منوی پنل"
+          onClick={() => setMobileOpen(true)}
+          className="p-2 rounded-lg bg-white/5 text-gray-300 hover:bg-white/10 transition-all"
+        >
+          ☰
+        </button>
+      </div>
+
+      <AiNavPanel isOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
+
+      <aside className="lg:col-span-2 hidden lg:flex flex-col justify-between py-2 border-l border-white/5 pr-2 lg:sticky lg:top-4 h-fit self-start">
       <div className="space-y-8">
         <div className="flex items-center gap-2 mb-8 px-1">
           <div className="w-8 h-8 bg-[#00f2ea] rounded-lg shadow-[0_0_15px_rgba(0,242,234,0.4)] flex items-center justify-center text-black font-bold">
@@ -54,6 +72,7 @@ const DashboardSidebar = () => {
         </button>
       </div>
     </aside>
+    </>
   );
 };
 
