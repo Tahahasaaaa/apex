@@ -1,6 +1,6 @@
 ﻿import { useEffect, useMemo, useState } from "react";
 import DashboardSidebar from "../components/DashboardSidebar";
-import { api, getAuthToken } from "../api/client";
+import { goalService } from "../services/goalService";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -29,18 +29,12 @@ const Goals = () => {
   };
 
   useEffect(() => {
-    const token = getAuthToken();
-    if (!token) {
-      setError("برای دریافت اهداف لطفاً وارد شوید.");
-      return;
-    }
-
     let ignore = false;
     setIsLoading(true);
     setError("");
 
-    api
-      .getGoals(token)
+    goalService
+      .getGoals()
       .then((data) => {
         if (ignore) return;
         const items = Array.isArray(data) ? data.map(normalizeGoal) : [];
@@ -70,15 +64,11 @@ const Goals = () => {
     event.preventDefault();
     if (!title.trim()) return;
 
-    const token = getAuthToken();
-    if (!token) {
-      setError("برای ثبت هدف جدید لطفاً وارد شوید.");
-      return;
-    }
-
     const payload = {
       title: title.trim(),
       category: priority,
+      description: description.trim(),
+      priority,
       ...(dueDate ? { deadline: dueDate.toISOString().split('T')[0] } : {}),
     };
 
@@ -86,7 +76,7 @@ const Goals = () => {
     setError("");
 
     try {
-      const created = await api.createGoal(payload, token);
+      const created = await goalService.createGoal(payload);
       const enriched = {
         ...normalizeGoal(created),
         description: description.trim() || "بدون توضیح",

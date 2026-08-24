@@ -4,7 +4,8 @@ import { FaHome, FaBars } from "react-icons/fa";
 import ChatSidebar from "../components/ChatSidebar";
 import ChatArea from "../components/ChatArea";
 import AiNavPanel from "../components/AiNavPanel";
-import { api, getAuthToken } from "../api/client";
+import { authService } from "../services/authService";
+import { planService } from "../services/planService";
 
 const generateId = () => Math.random().toString(36).substring(2, 10);
 
@@ -90,12 +91,11 @@ const AiChat = () => {
       setIsTyping(true);
 
       try {
-        const token = getAuthToken();
-        if (!token) {
+        if (!authService.isAuthenticated()) {
           throw new Error("برای استفاده از AI باید وارد شوید.");
         }
 
-        const result = await api.generatePlan({ prompt: content }, token);
+        const result = await planService.generatePlan({ prompt: content });
         const reply = buildAssistantText(result) || "پاسخی دریافت شد. در حال آماده‌سازی است.";
         const aiMsg = { id: generateId(), role: "assistant", content: reply, timestamp: new Date() };
 

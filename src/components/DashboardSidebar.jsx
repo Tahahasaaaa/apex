@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { setAuthToken } from "../api/client";
+import { authService } from "../services/authService";
 
 const DashboardSidebar = () => {
   const linkBase = "flex items-center gap-3 p-4 rounded-2xl transition-all";
@@ -45,7 +45,7 @@ const DashboardSidebar = () => {
         <button
           type="button"
           onClick={() => {
-            setAuthToken(null);
+            authService.logout();
             window.location.href = "/";
           }}
           className="flex items-center gap-3 text-red-400/70 hover:text-red-400 cursor-pointer py-2 transition-all text-sm font-bold w-full text-right"

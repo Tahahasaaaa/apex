@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { FiEdit2, FiMinus, FiPlus } from "react-icons/fi";
 import DashboardSidebar from "../components/DashboardSidebar";
-import { api, getAuthToken } from "../api/client";
+import { userService } from "../services/userService";
+import { authService } from "../services/authService";
 
 const LEARNING_STYLE_OPTIONS = [
   ["visual", "بصری"],
@@ -104,7 +105,7 @@ const Profile = () => {
   const [editingField, setEditingField] = useState(null);
 
   useEffect(() => {
-    const token = getAuthToken();
+    const token = authService.isAuthenticated() ? "session" : "";
     if (!token) {
       setError("برای مشاهدهٔ پروفایل لطفاً وارد شوید.");
       return;
@@ -114,8 +115,8 @@ const Profile = () => {
     setIsLoading(true);
     setError("");
 
-    api
-      .getProfile(token)
+    userService
+      .getProfile()
       .then((data) => {
         if (!ignore) {
           setProfile(data || null);
@@ -174,7 +175,7 @@ const Profile = () => {
   };
 
   const handleSave = async () => {
-    const token = getAuthToken();
+    const token = authService.isAuthenticated() ? "session" : "";
     if (!token) {
       setError("برای ذخیره تغییرات لطفاً وارد شوید.");
       return;
@@ -201,7 +202,7 @@ const Profile = () => {
       let updated;
 
       try {
-        updated = await api.updateProfile(payload, token);
+        updated = await userService.updateProfile(payload);
       } catch (firstError) {
         if (!("gender" in payload)) {
           throw firstError;
@@ -215,7 +216,7 @@ const Profile = () => {
           window.setTimeout(() => setSuccess(""), 2500);
           return;
         }
-        updated = await api.updateProfile(fallbackPayload, token);
+        updated = await userService.updateProfile(fallbackPayload);
         payload = fallbackPayload;
         successMessage = "پروفایل ذخیره شد. فیلد جنسیت فعلاً در API پشتیبانی نمی‌شود.";
       }

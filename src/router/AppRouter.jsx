@@ -9,30 +9,21 @@ import Profile from "../pages/Profile";
 import AiChat from "../pages/AiChat";
 import Growth from "../pages/Growth";
 import NotFound from "../pages/NotFound";
-import { api, getAuthToken, setAuthToken } from "../api/client";
+import { authService } from "../services/authService";
+import { dashboardService } from "../services/dashboardService";
+import { taskService } from "../services/taskService";
 
-const RequireAuth = ({ isLoggedIn, children }) => {
-  if (!isLoggedIn) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
-};
+const RequireAuth = ({ isLoggedIn, children }) =>
+  isLoggedIn ? children : <Navigate to="/login" replace />;
 
-const RouterContent = ({
-  isLoggedIn,
-  handleLogin,
-  normalizedTasks,
-  toggleTask,
-  tasksLoading,
-  tasksError,
-}) => {
+const RouterContent = ({ isLoggedIn, handleLogin, normalizedTasks, toggleTask, tasksLoading, tasksError, dashboard }) => {
   const location = useLocation();
+
   return (
     <div className="page-transition" key={location.pathname}>
       <Routes location={location}>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
-
         <Route
           path="/dashboard"
           element={
@@ -42,55 +33,23 @@ const RouterContent = ({
                 onToggleTask={toggleTask}
                 isLoading={tasksLoading}
                 error={tasksError}
+                summary={dashboard}
               />
             </RequireAuth>
           }
         />
-        <Route
-          path="/goals"
-          element={
-            <RequireAuth isLoggedIn={isLoggedIn}>
-              <Goals />
-            </RequireAuth>
-          }
-        />
+        <Route path="/goals" element={<RequireAuth isLoggedIn={isLoggedIn}><Goals /></RequireAuth>} />
         <Route
           path="/tasks"
           element={
             <RequireAuth isLoggedIn={isLoggedIn}>
-              <Tasks
-                tasks={normalizedTasks}
-                onToggleTask={toggleTask}
-                isLoading={tasksLoading}
-                error={tasksError}
-              />
+              <Tasks tasks={normalizedTasks} onToggleTask={toggleTask} isLoading={tasksLoading} error={tasksError} />
             </RequireAuth>
           }
         />
-        <Route
-          path="/profile"
-          element={
-            <RequireAuth isLoggedIn={isLoggedIn}>
-              <Profile />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/ai"
-          element={
-            <RequireAuth isLoggedIn={isLoggedIn}>
-              <AiChat />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/growth"
-          element={
-            <RequireAuth isLoggedIn={isLoggedIn}>
-              <Growth />
-            </RequireAuth>
-          }
-        />
+        <Route path="/profile" element={<RequireAuth isLoggedIn={isLoggedIn}><Profile /></RequireAuth>} />
+        <Route path="/ai" element={<RequireAuth isLoggedIn={isLoggedIn}><AiChat /></RequireAuth>} />
+        <Route path="/growth" element={<RequireAuth isLoggedIn={isLoggedIn}><Growth /></RequireAuth>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
@@ -98,11 +57,12 @@ const RouterContent = ({
 };
 
 const AppRouter = () => {
-  const [authToken, setAuthTokenState] = useState(() => getAuthToken());
-  const [isLoggedIn, setIsLoggedIn] = useState(() => Boolean(getAuthToken()));
+  const [session, setSession] = useState(() => authService.getSession());
   const [tasks, setTasks] = useState([]);
+  const [dashboard, setDashboard] = useState(null);
   const [tasksLoading, setTasksLoading] = useState(false);
   const [tasksError, setTasksError] = useState("");
+  const isLoggedIn = Boolean(session?.token);
 
   const normalizedTasks = useMemo(
     () =>
@@ -116,71 +76,60 @@ const AppRouter = () => {
             : task.start_time
               ? `ساعت ${task.start_time}`
               : "بدون زمان"),
-        cat:
-          task.cat ||
-          (task.related_goal ? `هدف ${task.related_goal}` : task.difficulty_rating ? `سختی ${task.difficulty_rating}` : "عمومی"),
+        cat: task.cat || task.category || (task.related_goal ? `هدف ${task.related_goal}` : "عمومی"),
       })),
     [tasks]
   );
 
-  const loadTasks = async (token) => {
+  const loadWorkspace = async () => {
     setTasksLoading(true);
     setTasksError("");
     try {
-      const data = await api.getTasks(token);
-      setTasks(Array.isArray(data) ? data : []);
+      const [taskData, summary] = await Promise.all([taskService.getTasks(), dashboardService.getDashboard()]);
+      setTasks(Array.isArray(taskData) ? taskData : []);
+      setDashboard(summary || null);
     } catch (error) {
-      setTasksError(error.message || "خطا در دریافت تسک‌ها");
+      setTasksError(error.message || "خطا در دریافت اطلاعات داشبورد");
     } finally {
       setTasksLoading(false);
     }
   };
 
   useEffect(() => {
-    if (!isLoggedIn) return;
-    const token = authToken || getAuthToken();
-    if (!token) return;
-    loadTasks(token);
-  }, [isLoggedIn, authToken]);
+    if (!isLoggedIn) {
+      setTasks([]);
+      setDashboard(null);
+      return;
+    }
+    loadWorkspace();
+  }, [isLoggedIn]);
 
   const toggleTask = async (id) => {
     const target = normalizedTasks.find((task) => task.id === id);
     if (!target) return;
     const nextDone = !target.done;
-
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, done: nextDone, is_completed: nextDone } : task
-      )
-    );
+    setTasks((previous) => previous.map((task) => (task.id === id ? { ...task, done: nextDone, is_completed: nextDone } : task)));
 
     try {
-      await api.updateTask(id, { is_completed: nextDone }, authToken);
+      const updated = await taskService.toggleTask(id, target.done);
+      setTasks((previous) => previous.map((task) => (task.id === id ? { ...task, ...updated } : task)));
+      setDashboard(await dashboardService.getDashboard());
     } catch (error) {
-      setTasks((prev) =>
-        prev.map((task) =>
-          task.id === id ? { ...task, done: target.done, is_completed: target.done } : task
-        )
-      );
-      setTasksError(error.message || "خطا در بروزرسانی تسک");
+      setTasks((previous) => previous.map((task) => (task.id === id ? { ...task, done: target.done, is_completed: target.done } : task)));
+      setTasksError(error.message || "خطا در به‌روزرسانی تسک");
     }
-  };
-
-  const handleLogin = (token) => {
-    setAuthToken(token);
-    setAuthTokenState(token);
-    setIsLoggedIn(true);
   };
 
   return (
     <BrowserRouter>
       <RouterContent
         isLoggedIn={isLoggedIn}
-        handleLogin={handleLogin}
+        handleLogin={setSession}
         normalizedTasks={normalizedTasks}
         toggleTask={toggleTask}
         tasksLoading={tasksLoading}
         tasksError={tasksError}
+        dashboard={dashboard}
       />
     </BrowserRouter>
   );
